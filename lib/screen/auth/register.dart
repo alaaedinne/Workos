@@ -1,20 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:workos_en/screen/auth/register.dart';
 
-class login extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _loginState extends State<login> with TickerProviderStateMixin {
+class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _animation;
   TextEditingController _emailtextController = TextEditingController(text: '');
   TextEditingController _passtextController = TextEditingController(text: '');
+  TextEditingController _fullNametextController =
+      TextEditingController(text: '');
+  TextEditingController _potitionCptextController =
+      TextEditingController(text: '');
   bool _obscureText = true;
-  final _loginFormKey = GlobalKey<FormState>();
+  final _SignUpFormKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -42,8 +45,8 @@ class _loginState extends State<login> with TickerProviderStateMixin {
     super.initState();
   }
 
-  void _submitFormOnLogin() {
-    final isValid = _loginFormKey.currentState.validate();
+  void _submitFormOnSignUp() {
+    final isValid = _SignUpFormKey.currentState.validate();
     if (isValid) {}
   }
 
@@ -64,7 +67,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
             fit: BoxFit.cover,
             alignment: FractionalOffset(_animation.value, 0),
           ),
-          // Start Login page #############################################
+          // Start SignUp page #############################################
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView(
@@ -73,7 +76,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                   height: size.height * 0.1,
                 ),
                 Text(
-                  "Login",
+                  "SignUp",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -86,7 +89,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                     text: TextSpan(
                   children: [
                     TextSpan(
-                        text: "Don\'t have an acount",
+                        text: "Already have an acount",
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -94,12 +97,10 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                     TextSpan(text: "   "),
                     TextSpan(
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignUp(),
-                              )),
-                        text: "Register",
+                          ..onTap = () => Navigator.canPop(context)
+                              ? Navigator.pop(context)
+                              : null,
+                        text: "Login",
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: Colors.blue.shade300,
@@ -110,18 +111,47 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                 SizedBox(
                   height: 40,
                 ),
-
-                /// Email input #####################################
                 Form(
-                  key: _loginFormKey,
+                  key: _SignUpFormKey,
                   child: Column(
                     children: [
+                      /// Full Name input #########################
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailtextController,
                         validator: (value) {
                           if (value.isEmpty || value.contains("@")) {
                             return "please enter a valid Email adress";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Full name',
+                          hintStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      /// Email input #####################################
+                      TextFormField(
+                        keyboardType: TextInputType.name,
+                        controller: _fullNametextController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "This Field is missing";
                           } else {
                             return null;
                           }
@@ -185,33 +215,43 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                         ),
                         style: TextStyle(color: Colors.white),
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      // Position in the company ###################
+                      TextFormField(
+                        keyboardType: TextInputType.name,
+                        controller: _potitionCptextController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "This Field is missing ";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Potition in the company',
+                          hintStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
-
                 SizedBox(
-                  height: 15,
-                ),
-
-                /// forget password part #####################
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Forget password ?",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            decoration: TextDecoration.underline,
-                            fontStyle: FontStyle.italic),
-                      )),
-                ),
-                SizedBox(
-                  height: 40,
+                  height: 80,
                 ),
                 MaterialButton(
-                  onPressed: _submitFormOnLogin,
+                  onPressed: _submitFormOnSignUp,
                   color: Colors.pink.shade700,
                   elevation: 8,
                   shape: RoundedRectangleBorder(
@@ -222,7 +262,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Login ",
+                          "SignUp ",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -231,7 +271,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                         SizedBox(
                           width: 8,
                         ),
-                        Icon(Icons.login)
+                        Icon(Icons.person_add)
                       ],
                     ),
                   ),
