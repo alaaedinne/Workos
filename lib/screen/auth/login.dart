@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class login extends StatefulWidget {
@@ -9,11 +10,16 @@ class login extends StatefulWidget {
 class _loginState extends State<login> with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _animation;
+  TextEditingController _emailtextController = TextEditingController(text: '');
+  TextEditingController _passtextController = TextEditingController(text: '');
+  bool _obscureText = true;
+  final _loginFormKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _animationController.dispose();
-
+    _emailtextController.dispose();
+    _passtextController.dispose();
     super.dispose();
   }
 
@@ -33,6 +39,11 @@ class _loginState extends State<login> with TickerProviderStateMixin {
             }
           });
     super.initState();
+  }
+
+  void _submitFormOnLogin() {
+    final isValid = _loginFormKey.currentState.validate();
+    print("is valid $isValid");
   }
 
   @override
@@ -81,6 +92,8 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                             fontSize: 16)),
                     TextSpan(text: "   "),
                     TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => {print("Rester has been called")},
                         text: "Register",
                         style: TextStyle(
                             decoration: TextDecoration.underline,
@@ -89,29 +102,135 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                             fontSize: 16)),
                   ],
                 )),
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty || value.contains("@")) {
-                      return "please enter a valid Email adress";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    hintStyle: TextStyle(color: Colors.white),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    errorBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
+                SizedBox(
+                  height: 40,
+                ),
+
+                /// Email input #####################################
+                Form(
+                  key: _loginFormKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailtextController,
+                        validator: (value) {
+                          if (value.isEmpty || value.contains("@")) {
+                            return "please enter a valid Email adress";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          hintStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      // password #################################
+
+                      TextFormField(
+                        obscureText: _obscureText,
+                        keyboardType: TextInputType.visiblePassword,
+                        controller: _passtextController,
+                        validator: (value) {
+                          if (value.isEmpty || value.length < 7) {
+                            return "please enter a valid password ";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            child: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                          ),
+                          hintText: 'Email',
+                          hintStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: 15,
+                ),
+
+                /// forget password part #####################
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Forget password ?",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            decoration: TextDecoration.underline,
+                            fontStyle: FontStyle.italic),
+                      )),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                MaterialButton(
+                  onPressed: _submitFormOnLogin,
+                  color: Colors.pink.shade700,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(13)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Login ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Icon(Icons.login)
+                      ],
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
-                ),
+                )
               ],
             ),
           )
