@@ -37,6 +37,7 @@ class _loginState extends State<login> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
@@ -52,16 +53,67 @@ class _loginState extends State<login> with TickerProviderStateMixin {
             alignment: FractionalOffset(_animation.value, 0),
           ),
           // Start Login page #############################################
-          ListView(
-            children: [
-              Text(
-                "Login",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: size.height * 0.1,
+                ),
+                Text(
+                  "Login",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                RichText(
+                    text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "Don\'t have an acount",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16)),
+                    TextSpan(text: "   "),
+                    TextSpan(
+                        text: "Register",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue.shade300,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16)),
+                  ],
+                )),
+                TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty || value.contains("@")) {
+                      return "please enter a valid Email adress";
+                    } else {
+                      return null;
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Email',
+                    hintStyle: TextStyle(color: Colors.white),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red),
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
           )
         ],
       ),
