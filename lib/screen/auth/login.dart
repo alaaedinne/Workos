@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:workos_en/screen/auth/forget_pass.dart';
 import 'package:workos_en/screen/auth/register.dart';
 
 class login extends StatefulWidget {
@@ -214,7 +215,13 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => forgetPassScreen(),
+                            ));
+                      },
                       child: Text(
                         "Forget password ?",
                         style: TextStyle(
