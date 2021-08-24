@@ -12,8 +12,15 @@ class _loginState extends State<login> with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _animation;
   TextEditingController _emailtextController = TextEditingController(text: '');
+
   TextEditingController _passtextController = TextEditingController(text: '');
+
+  FocusNode _emailFocusNode = FocusNode();
+
+  FocusNode _passFocusNode = FocusNode();
+
   bool _obscureText = true;
+
   final _loginFormKey = GlobalKey<FormState>();
 
   @override
@@ -21,6 +28,9 @@ class _loginState extends State<login> with TickerProviderStateMixin {
     _animationController.dispose();
     _emailtextController.dispose();
     _passtextController.dispose();
+
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
     super.dispose();
   }
 
@@ -117,6 +127,10 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                   child: Column(
                     children: [
                       TextFormField(
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_passFocusNode),
+                        focusNode: _emailFocusNode,
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailtextController,
                         validator: (value) {
@@ -147,6 +161,9 @@ class _loginState extends State<login> with TickerProviderStateMixin {
                       // password #################################
 
                       TextFormField(
+                        textInputAction: TextInputAction.done,
+                        onEditingComplete: () => _submitFormOnLogin,
+                        focusNode: _passFocusNode,
                         obscureText: _obscureText,
                         keyboardType: TextInputType.visiblePassword,
                         controller: _passtextController,
