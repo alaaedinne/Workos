@@ -16,14 +16,31 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
       TextEditingController(text: '');
   TextEditingController _potitionCptextController =
       TextEditingController(text: '');
+
+  FocusNode _fullNameFocusNode = FocusNode();
+
+  FocusNode _emailFocusNode = FocusNode();
+
+  FocusNode _passFocusNode = FocusNode();
+
+  FocusNode _positionCpFocusNode = FocusNode();
+
   bool _obscureText = true;
-  final _SignUpFormKey = GlobalKey<FormState>();
+  final _signUpFormKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _animationController.dispose();
     _emailtextController.dispose();
     _passtextController.dispose();
+    _fullNametextController.dispose();
+    _potitionCptextController.dispose();
+
+    _fullNameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
+    _positionCpFocusNode.dispose();
+
     super.dispose();
   }
 
@@ -46,7 +63,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
   }
 
   void _submitFormOnSignUp() {
-    final isValid = _SignUpFormKey.currentState.validate();
+    final isValid = _signUpFormKey.currentState.validate();
     if (isValid) {}
   }
 
@@ -112,41 +129,15 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                   height: 40,
                 ),
                 Form(
-                  key: _SignUpFormKey,
+                  key: _signUpFormKey,
                   child: Column(
                     children: [
                       /// Full Name input #########################
                       TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailtextController,
-                        validator: (value) {
-                          if (value.isEmpty || value.contains("@")) {
-                            return "please enter a valid Email adress";
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Full name',
-                          hintStyle: TextStyle(color: Colors.white),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                          ),
-                        ),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-
-                      /// Email input #####################################
-                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () => FocusScope.of(context)
+                            .requestFocus(_emailFocusNode),
+                        focusNode: _fullNameFocusNode,
                         keyboardType: TextInputType.name,
                         controller: _fullNametextController,
                         validator: (value) {
@@ -174,9 +165,48 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                       SizedBox(
                         height: 20,
                       ),
+
+                      /// Email input #####################################
+
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_passFocusNode),
+                        focusNode: _emailFocusNode,
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailtextController,
+                        validator: (value) {
+                          if (value.isEmpty || value.contains("@")) {
+                            return "please enter a valid Email adress";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Full name',
+                          hintStyle: TextStyle(color: Colors.white),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       // password #################################
 
                       TextFormField(
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () => FocusScope.of(context)
+                            .requestFocus(_positionCpFocusNode),
+                        focusNode: _passFocusNode,
                         obscureText: _obscureText,
                         keyboardType: TextInputType.visiblePassword,
                         controller: _passtextController,
@@ -219,7 +249,11 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
                         height: 20,
                       ),
                       // Position in the company ###################
+
                       TextFormField(
+                        textInputAction: TextInputAction.done,
+                        onEditingComplete: () => _submitFormOnSignUp,
+                        focusNode: _positionCpFocusNode,
                         keyboardType: TextInputType.name,
                         controller: _potitionCptextController,
                         validator: (value) {
